@@ -35,7 +35,7 @@ function useAttendances(
 
 export function HistoryPage() {
   const now = new Date();
-  const { attendances, isLoading, isError } = useAttendances(
+  const { attendances, isLoading } = useAttendances(
     now.getFullYear(),
     now.getMonth() + 1
   );
@@ -87,7 +87,7 @@ export function HistoryPage() {
           return (
             <Table.Row>
               <Table.Cell>{`${now.getFullYear()}/${now.getMonth() + 1}/${
-                group[0]
+                day
               }`}</Table.Cell>
               <Table.Cell>
                 {firstArrival ? getTimePart(firstArrival.occurredAt) : "-"}
