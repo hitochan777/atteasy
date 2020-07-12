@@ -2,6 +2,8 @@ import React, { useMemo } from "react";
 import useSWR from "swr";
 import { Table } from "semantic-ui-react";
 import { Attendance, AttendanceType } from "./attendance";
+import { useLocation } from "react-router-dom";
+import { YearMonthSelector } from "./YearMonthSelector";
 
 const fetcher = (endpoint: string, ...args: any[]) =>
   fetch(endpoint, ...args).then((res) => res.json());
@@ -14,7 +16,7 @@ function useAttendances(
   year: number,
   month: number
 ): { attendances?: Attendance[]; isLoading: boolean; isError: any } {
-  const endpoint = `${process.env.REACT_APP_API_ENDPOINT}/api/GetAttendances?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app`;
+  const endpoint = `${process.env.REACT_APP_API_ENDPOINT}/api/GetAttendances?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app&year=${year}&month=${month}`;
   const { data, error } = useSWR<
     { id: string; occurredAt: string; type: number }[]
   >(endpoint, fetcher);
@@ -33,11 +35,18 @@ function useAttendances(
   };
 }
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 export function HistoryPage() {
   const now = new Date();
+  const query = useQuery();
+  const year = query.get("year");
+  const month = query.get("month");
   const { attendances, isLoading } = useAttendances(
-    now.getFullYear(),
-    now.getMonth() + 1
+    year ? +year : now.getFullYear(),
+    month ? +month : now.getMonth() + 1
   );
 
   const groupedAttendances = useMemo(() => {
@@ -65,41 +74,44 @@ export function HistoryPage() {
   }
 
   return (
-    <Table celled>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>日にち</Table.HeaderCell>
-          <Table.HeaderCell>First Enter</Table.HeaderCell>
-          <Table.HeaderCell>Last Leave</Table.HeaderCell>
-          <Table.HeaderCell>詳細</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
+    <div>
+      <YearMonthSelector year={2020} month={7} /> 
+      <Table celled>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>日にち</Table.HeaderCell>
+            <Table.HeaderCell>First Enter</Table.HeaderCell>
+            <Table.HeaderCell>Last Leave</Table.HeaderCell>
+            <Table.HeaderCell>詳細</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
 
-      <Table.Body>
-        {groupedAttendances.map((group) => {
-          const [day, attendances] = group;
-          const firstArrival = attendances.find(
-            (attendance) => attendance.type === AttendanceType.Arrive
-          );
-          const lastLeave = attendances
-            .reverse()
-            .find((attendance) => attendance.type === AttendanceType.Leave);
-          return (
-            <Table.Row>
-              <Table.Cell>{`${now.getFullYear()}/${now.getMonth() + 1}/${
-                day
-              }`}</Table.Cell>
-              <Table.Cell>
-                {firstArrival ? getTimePart(firstArrival.occurredAt) : "-"}
-              </Table.Cell>
-              <Table.Cell>
-                {lastLeave ? getTimePart(lastLeave.occurredAt) : "-"}
-              </Table.Cell>
-              <Table.Cell>詳細</Table.Cell>
-            </Table.Row>
-          );
-        })}
-      </Table.Body>
-    </Table>
+        <Table.Body>
+          {groupedAttendances.map((group) => {
+            const [day, attendances] = group;
+            const firstArrival = attendances.find(
+              (attendance) => attendance.type === AttendanceType.Arrive
+            );
+            const lastLeave = attendances
+              .reverse()
+              .find((attendance) => attendance.type === AttendanceType.Leave);
+            return (
+              <Table.Row key={day}>
+                <Table.Cell>{`${now.getFullYear()}/${
+                  now.getMonth() + 1
+                }/${day}`}</Table.Cell>
+                <Table.Cell>
+                  {firstArrival ? getTimePart(firstArrival.occurredAt) : "-"}
+                </Table.Cell>
+                <Table.Cell>
+                  {lastLeave ? getTimePart(lastLeave.occurredAt) : "-"}
+                </Table.Cell>
+                <Table.Cell>詳細</Table.Cell>
+              </Table.Row>
+            );
+          })}
+        </Table.Body>
+      </Table>
+    </div>
   );
 }
