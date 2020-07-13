@@ -3,14 +3,16 @@ import useSWR from "swr";
 import { fetcher } from "./fetcher";
 
 type PrincipalData = {
-  identityProvider: string;
-  userId: string;
-  userDetails: string;
-  userRoles: string[];
+  clientPrincipal: {
+    identityProvider: string;
+    userId: string;
+    userDetails: string;
+    userRoles: string[];
+  };
 };
 
 export const useUser = (): {
-  data?: PrincipalData;
+  data?: PrincipalData["clientPrincipal"];
   loading: boolean;
   error: any;
 } => {
@@ -27,5 +29,5 @@ export const useUser = (): {
       error: null,
     };
   }
-  return { data, loading: !data && !error, error };
+  return { data: data?.clientPrincipal, loading: !data && !error, error };
 };
