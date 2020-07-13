@@ -2,11 +2,10 @@ import React, { useMemo } from "react";
 import useSWR from "swr";
 import { Table } from "semantic-ui-react";
 import { Attendance, AttendanceType } from "./attendance";
-import { useLocation } from "react-router-dom";
+import { useLocation, Redirect } from "react-router-dom";
 import { YearMonthSelector } from "./YearMonthSelector";
-
-const fetcher = (endpoint: string, ...args: any[]) =>
-  fetch(endpoint, ...args).then((res) => res.json());
+import { fetcher } from "./fetcher";
+import { useUser } from "./useUser";
 
 function getTimePart(date: Date): string {
   return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
@@ -40,6 +39,7 @@ function useQuery() {
 }
 
 export function HistoryPage() {
+  const { data, loading: isLoadingUser } = useUser();
   const now = new Date();
   const query = useQuery();
   const year = query.get("year");
@@ -69,13 +69,17 @@ export function HistoryPage() {
     return Object.entries(groupedAttendances);
   }, [attendances]);
 
-  if (isLoading) {
+  if (isLoading || isLoadingUser) {
     return <span>Loading the page...</span>;
+  }
+
+  if (!data) {
+    return <Redirect to="/signin" />;
   }
 
   return (
     <div>
-      <YearMonthSelector year={2020} month={7} /> 
+      <YearMonthSelector year={2020} month={7} />
       <Table celled>
         <Table.Header>
           <Table.Row>

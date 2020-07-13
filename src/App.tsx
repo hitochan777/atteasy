@@ -1,23 +1,28 @@
-import React from "react"
-import { Navbar } from "./Navbar"
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
-import { LogPage } from "./LogPage"
-import { HistoryPage } from "./History"
+import React from "react";
+import { Navbar } from "./Navbar";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { LogPage } from "./LogPage";
+import { HistoryPage } from "./History";
 
 function App() {
-    return <div>
-        <Router>
-        <Navbar/>
+  return (
+    <div>
+      <Router>
+        <Navbar />
         <Switch>
-            <Route path="/history">
-                <HistoryPage/>
-            </Route>
-            <Route path="/">
-                <LogPage />
-            </Route>
+          <Route path="/signin">
+            <div>signin page</div>
+          </Route>
+          <Route path="/history">
+            <HistoryPage />
+          </Route>
+          <Route path="/">
+            <LogPage />
+          </Route>
         </Switch>
-        </Router>
+      </Router>
     </div>
+  );
 }
 
-export default App
+export default App;
