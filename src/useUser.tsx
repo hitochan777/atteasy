@@ -21,7 +21,7 @@ export const useUser = (): {
     return {
       data: {
         identityProvider: "local",
-        userId: "userId",
+        userId: "15bff17dd5c447d3861e0c74bb762a9c",
         userDetails: "hoge@hoge.com",
         userRoles: ["writer"],
       },
