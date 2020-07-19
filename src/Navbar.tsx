@@ -7,7 +7,6 @@ type ItemType = "log" | "history";
 
 function useActiveItem(): ItemType {
   const match = useRouteMatch();
-  console.log(match);
   if (match.path === "/") {
     return "log";
   } else if (match.path === "/history") {

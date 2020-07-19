@@ -1,39 +1,12 @@
 import React, { useMemo } from "react";
-import useSWR from "swr";
+import { useLocation, Redirect, Link } from "react-router-dom";
 import { Table } from "semantic-ui-react";
+
 import { Attendance, AttendanceType } from "./attendance";
-import { useLocation, Redirect } from "react-router-dom";
 import { YearMonthSelector } from "./YearMonthSelector";
-import { fetcher } from "./fetcher";
 import { useUser } from "./useUser";
-
-function getTimePart(date: Date): string {
-  return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-}
-
-function useAttendances(
-  userId: string | undefined,
-  year: number,
-  month: number
-): { attendances?: Attendance[]; isLoading: boolean; isError: any } {
-  const endpoint = `${process.env.REACT_APP_API_ENDPOINT}/api/${userId}/attendances?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app&year=${year}&month=${month}`;
-  const { data, error } = useSWR<
-    { id: string; occurredAt: string; type: number }[]
-  >(userId ? endpoint : null, fetcher);
-  const attendances = data?.map(
-    (attendance) =>
-      new Attendance(
-        attendance.id,
-        new Date(attendance.occurredAt),
-        attendance.type
-      )
-  );
-  return {
-    attendances,
-    isLoading: !error && !data,
-    isError: error,
-  };
-}
+import { useAttendances } from "./useAttendances";
+import { getTimePart } from "./time";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -112,7 +85,15 @@ export function HistoryPage() {
                 <Table.Cell>
                   {lastLeave ? getTimePart(lastLeave.occurredAt) : "-"}
                 </Table.Cell>
-                <Table.Cell>詳細</Table.Cell>
+                <Table.Cell>
+                  <Link
+                    to={`/history/${now.getFullYear()}/${
+                      now.getMonth() + 1
+                    }/${day}`}
+                  >
+                    詳細
+                  </Link>
+                </Table.Cell>
               </Table.Row>
             );
           })}
