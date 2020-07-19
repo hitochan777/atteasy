@@ -3,16 +3,16 @@ import { Button } from "semantic-ui-react";
 import { useUser } from "./useUser";
 import { Redirect } from "react-router-dom";
 
-async function logAttendance(type: "Arrive" | "Leave") {
+async function logAttendance(userId: string, type: "Arrive" | "Leave") {
   const data = { type };
   await fetch(
-    `${process.env.REACT_APP_API_ENDPOINT}/api/LogAttendance?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app`,
+    `${process.env.REACT_APP_API_ENDPOINT}/api/LogAttendance/${userId}?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app`,
     {
       method: "POST",
       body: JSON.stringify(data),
       headers: { "content-type": "application/json" },
     }
-  ); // TODO: replace with correct Endpoint
+  );
 }
 
 export function LogPage() {
@@ -24,10 +24,10 @@ export function LogPage() {
     return <Redirect to="/signin" />;
   }
   const handleAttendClick = async () => {
-    await logAttendance("Arrive");
+    await logAttendance(data.userId, "Arrive");
   };
   const handleLeaveClick = async () => {
-    await logAttendance("Leave");
+    await logAttendance(data.userId, "Leave");
   };
   return (
     <div>

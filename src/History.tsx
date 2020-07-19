@@ -12,13 +12,14 @@ function getTimePart(date: Date): string {
 }
 
 function useAttendances(
+  userId: string | undefined,
   year: number,
   month: number
 ): { attendances?: Attendance[]; isLoading: boolean; isError: any } {
-  const endpoint = `${process.env.REACT_APP_API_ENDPOINT}/api/GetAttendances?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app&year=${year}&month=${month}`;
+  const endpoint = `${process.env.REACT_APP_API_ENDPOINT}/api/GetAttendances/${userId}?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app&year=${year}&month=${month}`;
   const { data, error } = useSWR<
     { id: string; occurredAt: string; type: number }[]
-  >(endpoint, fetcher);
+  >(userId ? endpoint : null, fetcher);
   const attendances = data?.map(
     (attendance) =>
       new Attendance(
@@ -45,6 +46,7 @@ export function HistoryPage() {
   const year = query.get("year");
   const month = query.get("month");
   const { attendances, isLoading } = useAttendances(
+    data?.userId,
     year ? +year : now.getFullYear(),
     month ? +month : now.getMonth() + 1
   );
