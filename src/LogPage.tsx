@@ -6,7 +6,7 @@ import { Redirect } from "react-router-dom";
 async function logAttendance(userId: string, type: "Arrive" | "Leave") {
   const data = { type };
   await fetch(
-    `${process.env.REACT_APP_API_ENDPOINT}/api/LogAttendance/${userId}?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app`,
+    `${process.env.REACT_APP_API_ENDPOINT}/api/${userId}/attendance?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app`,
     {
       method: "POST",
       body: JSON.stringify(data),

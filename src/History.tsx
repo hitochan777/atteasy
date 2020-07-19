@@ -16,7 +16,7 @@ function useAttendances(
   year: number,
   month: number
 ): { attendances?: Attendance[]; isLoading: boolean; isError: any } {
-  const endpoint = `${process.env.REACT_APP_API_ENDPOINT}/api/GetAttendances/${userId}?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app&year=${year}&month=${month}`;
+  const endpoint = `${process.env.REACT_APP_API_ENDPOINT}/api/${userId}/attendances?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app&year=${year}&month=${month}`;
   const { data, error } = useSWR<
     { id: string; occurredAt: string; type: number }[]
   >(userId ? endpoint : null, fetcher);
