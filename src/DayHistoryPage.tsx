@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
-import { Table } from "semantic-ui-react";
+import { Table, Button } from "semantic-ui-react";
 
 import { AttendanceType } from "./attendance";
-import { useAttendances } from "./useAttendances";
+import { useAttendances, useDeleteAttendance } from "./useAttendances";
 import { useUser } from "./useUser";
 import { useRouteMatch } from "react-router-dom";
 import { getTimePart } from "./time";
@@ -19,6 +19,7 @@ export const DayHistoryPage: React.FC = () => {
     attendances: allAttendances,
     isLoading: isLoadingAttendance,
   } = useAttendances(data?.userId, +year, +month);
+  const { deleteAttendance, loading: deleting } = useDeleteAttendance();
   const attendances = useMemo(
     () =>
       allAttendances?.filter(
@@ -46,7 +47,16 @@ export const DayHistoryPage: React.FC = () => {
             <Table.Row key={attendance.id}>
               <Table.Cell>{AttendanceType[attendance.type]}</Table.Cell>
               <Table.Cell>{getTimePart(attendance.occurredAt)}</Table.Cell>
-              <Table.Cell>削除</Table.Cell>
+              <Table.Cell>
+                <Button
+                  onClick={() => {
+                    deleteAttendance(data?.userId, attendance);
+                  }}
+                  disabled={deleting}
+                >
+                  削除
+                </Button>
+              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
