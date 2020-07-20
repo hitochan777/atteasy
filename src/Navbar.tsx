@@ -32,7 +32,9 @@ export const Navbar = () => {
         {data ? (
           <>
             <Menu.Item>Welcome {data.userDetails}</Menu.Item>
-            <Menu.Item name="logout"></Menu.Item>
+            <Link to="/.auth/logout">
+              <Menu.Item name="logout" />
+            </Link>
           </>
         ) : (
           <Link to="/signin">

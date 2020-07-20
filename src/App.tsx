@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { LogPage } from "./LogPage";
 import { HistoryPage } from "./History";
 import { DayHistoryPage } from "./DayHistoryPage";
+import { SigninPage } from "./Signin";
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <Navbar />
         <Switch>
           <Route path="/signin">
-            <div>signin page</div>
+            <SigninPage />
           </Route>
           <Route path="/history/:year/:month/:day" component={DayHistoryPage} />
           <Route path="/history">
