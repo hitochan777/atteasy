@@ -50,7 +50,10 @@ export const DayHistoryPage: React.FC = () => {
               <Table.Cell>
                 <Button
                   onClick={() => {
-                    deleteAttendance(data?.userId, attendance);
+                    // eslint-disable-next-line 
+                    if (confirm("本当に削除しますか?")) {
+                      deleteAttendance(data?.userId, attendance);
+                    }
                   }}
                   disabled={deleting}
                 >
