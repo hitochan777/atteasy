@@ -16,17 +16,17 @@ export function LogPage() {
     return <Redirect to="/signin" />;
   }
   const handleAttendClick = async () => {
-    await logAttendance(data.userId, "Arrive");
+    await logAttendance(data.userId, AttendanceType.Arrive);
   };
   const handleLeaveClick = async () => {
-    await logAttendance(data.userId, "Leave");
+    await logAttendance(data.userId, AttendanceType.Leave);
   };
   return (
     <div>
-      <Button primary onClick={handleAttendClick}>
+      <Button primary onClick={handleAttendClick} disabled={loggingAttendance}>
         Attend
       </Button>
-      <Button secondary onClick={handleLeaveClick}>
+      <Button secondary onClick={handleLeaveClick} disabled={loggingAttendance}>
         Leave
       </Button>
     </div>

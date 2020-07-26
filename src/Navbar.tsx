@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
-import { Menu, Modal, Button, Form, Checkbox, Input } from "semantic-ui-react";
+import { Menu, Modal, Button } from "semantic-ui-react";
 import { useUser } from "./useUser";
-import { AttendanceType } from "./attendance";
-import SemanticDatePicker from "react-semantic-ui-datepickers";
+import { AddForm, useAddForm } from "./AddForm";
+import { useLogAttendance } from "./useAttendances";
 
 type ItemType = "log" | "history";
 
@@ -17,14 +17,23 @@ function useActiveItem(): ItemType {
   return "log";
 }
 
+const useAddFormSubmit = (userId: string | undefined) => {
+  const { logAttendance } = useLogAttendance();
+  const submitAddForm = async (values: AddForm) => {
+    if (!userId) {
+      return;
+    }
+    await logAttendance(userId, values.attendanceType, new Date());
+  };
+  return submitAddForm;
+};
+
 export const Navbar = () => {
   const activeItem = useActiveItem();
   const { data } = useUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [form, setForm] = useState({
-    attendanceType: AttendanceType.Arrive,
-    occurredAt: new Date(),
-  });
+  const submitAddForm = useAddFormSubmit(data?.userId);
+  const addForm = useAddForm(submitAddForm);
 
   const openAddModal = () => {
     setIsModalOpen(true);
@@ -33,14 +42,6 @@ export const Navbar = () => {
   const closeAddModal = () => {
     setIsModalOpen(false);
   };
-
-  const handleFormChange = () => {
-    setForm({ ...form });
-  };
-
-  const handleDateChange = (_: unknown, data: any) => {
-    setForm({...form, occurredAt: data.value})
-  }
 
   return (
     <>
@@ -71,42 +72,15 @@ export const Navbar = () => {
       <Modal dimmer="inverted" open={isModalOpen} onClose={closeAddModal}>
         <Modal.Header>Add attendance</Modal.Header>
         <Modal.Content>
-          <Form>
-            <Form.Field>
-              <SemanticDatePicker onChange={handleDateChange} />
-              <Input></Input>
-            </Form.Field>
-            <Form.Field>
-              <Checkbox
-                radio
-                label="Attend"
-                name="attendanceRadioGroup"
-                value={AttendanceType.Arrive}
-                checked={form.attendanceType === AttendanceType.Arrive}
-                onChange={handleFormChange}
-              />
-              <Checkbox
-                radio
-                label="Leave"
-                name="attendanceRadioGroup"
-                value={AttendanceType.Leave}
-                checked={form.attendanceType === AttendanceType.Leave}
-                onChange={handleFormChange}
-              />
-            </Form.Field>
-          </Form>
+          <AddForm form={addForm} />
         </Modal.Content>
         <Modal.Actions>
           <Button color="black" onClick={closeAddModal}>
             Cancel
           </Button>
-          <Button
-            positive
-            icon="checkmark"
-            labelPosition="right"
-            content="Add"
-            onClick={closeAddModal}
-          />
+          <Button positive onClick={addForm.handlers.handleSubmit}>
+            Add
+          </Button>
         </Modal.Actions>
       </Modal>
     </>
