@@ -3,20 +3,12 @@ import { Button } from "semantic-ui-react";
 import { useUser } from "./useUser";
 import { Redirect } from "react-router-dom";
 
-async function logAttendance(userId: string, type: "Arrive" | "Leave") {
-  const data = { type };
-  await fetch(
-    `${process.env.REACT_APP_API_ENDPOINT}/api/${userId}/attendance?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app`,
-    {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "content-type": "application/json" },
-    }
-  );
-}
+import { useLogAttendance } from "./useAttendances";
+import { AttendanceType } from "./attendance";
 
 export function LogPage() {
   const { data, loading } = useUser();
+  const { logAttendance, loading: loggingAttendance } = useLogAttendance();
   if (loading) {
     return <div>loading...</div>;
   }
