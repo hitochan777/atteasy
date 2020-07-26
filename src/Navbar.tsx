@@ -91,7 +91,10 @@ export const Navbar = () => {
           </Button>
           <Button
             positive
-            onClick={addForm.handlers.handleSubmit}
+            onClick={async () => {
+              await addForm.handlers.handleSubmit();
+              closeAddModal();
+            }}
             disabled={loading}
           >
             Add
