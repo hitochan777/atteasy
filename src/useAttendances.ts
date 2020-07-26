@@ -89,7 +89,7 @@ export const useLogAttendance = (): {
         type: AttendanceType[type],
       };
       if (occurredAt) {
-        data.occurredAt = occurredAt.getTime();
+        data.occurredAt = occurredAt.getTime() / 1000;
       }
       await fetch(endpoint, {
         method: "POST",

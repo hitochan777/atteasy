@@ -4,6 +4,7 @@ import { Menu, Modal, Button } from "semantic-ui-react";
 import { useUser } from "./useUser";
 import { AddForm, useAddForm } from "./AddForm";
 import { useLogAttendance } from "./useAttendances";
+import { extractTimeInfo } from "./time";
 
 type ItemType = "log" | "history";
 
@@ -18,21 +19,31 @@ function useActiveItem(): ItemType {
 }
 
 const useAddFormSubmit = (userId: string | undefined) => {
-  const { logAttendance } = useLogAttendance();
+  const { logAttendance, loading } = useLogAttendance();
   const submitAddForm = async (values: AddForm) => {
     if (!userId) {
       return;
     }
-    await logAttendance(userId, values.attendanceType, new Date());
+    const date = values.occurredAt.date;
+    const { hour, minute, second } = extractTimeInfo(values.occurredAt.time);
+    const occurredAt = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      hour,
+      minute,
+      second
+    );
+    await logAttendance(userId, values.attendanceType, occurredAt);
   };
-  return submitAddForm;
+  return { submitAddForm, loading };
 };
 
 export const Navbar = () => {
   const activeItem = useActiveItem();
   const { data } = useUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const submitAddForm = useAddFormSubmit(data?.userId);
+  const { submitAddForm, loading } = useAddFormSubmit(data?.userId);
   const addForm = useAddForm(submitAddForm);
 
   const openAddModal = () => {
@@ -75,10 +86,14 @@ export const Navbar = () => {
           <AddForm form={addForm} />
         </Modal.Content>
         <Modal.Actions>
-          <Button color="black" onClick={closeAddModal}>
+          <Button color="black" onClick={closeAddModal} disabled={loading}>
             Cancel
           </Button>
-          <Button positive onClick={addForm.handlers.handleSubmit}>
+          <Button
+            positive
+            onClick={addForm.handlers.handleSubmit}
+            disabled={loading}
+          >
             Add
           </Button>
         </Modal.Actions>
