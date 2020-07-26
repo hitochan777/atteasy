@@ -85,11 +85,11 @@ export const useLogAttendance = (): {
     setLoading(true);
     const endpoint = `${process.env.REACT_APP_API_ENDPOINT}/api/${userId}/attendance?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app`;
     try {
-      const data: { type: string; occurredAt?: number } = {
+      const data: { type: string; occurredAt?: string } = {
         type: AttendanceType[type],
       };
       if (occurredAt) {
-        data.occurredAt = occurredAt.getTime() / 1000;
+        data.occurredAt = occurredAt.toISOString();
       }
       await fetch(endpoint, {
         method: "POST",
