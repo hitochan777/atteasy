@@ -54,6 +54,11 @@ export const Navbar = () => {
     setIsModalOpen(false);
   };
 
+  const addAttendance = async () => {
+    await addForm.handlers.handleSubmit();
+    closeAddModal();
+  };
+
   return (
     <>
       <Menu>
@@ -89,14 +94,7 @@ export const Navbar = () => {
           <Button color="black" onClick={closeAddModal} disabled={loading}>
             Cancel
           </Button>
-          <Button
-            positive
-            onClick={async () => {
-              await addForm.handlers.handleSubmit();
-              closeAddModal();
-            }}
-            disabled={loading}
-          >
+          <Button positive onClick={addAttendance} disabled={loading}>
             Add
           </Button>
         </Modal.Actions>
