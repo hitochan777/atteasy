@@ -3,20 +3,12 @@ import { Button } from "semantic-ui-react";
 import { useUser } from "./useUser";
 import { Redirect } from "react-router-dom";
 
-async function logAttendance(userId: string, type: "Arrive" | "Leave") {
-  const data = { type };
-  await fetch(
-    `${process.env.REACT_APP_API_ENDPOINT}/api/${userId}/attendance?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app`,
-    {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "content-type": "application/json" },
-    }
-  );
-}
+import { useLogAttendance } from "./useAttendances";
+import { AttendanceType } from "./attendance";
 
 export function LogPage() {
   const { data, loading } = useUser();
+  const { logAttendance, loading: loggingAttendance } = useLogAttendance();
   if (loading) {
     return <div>loading...</div>;
   }
@@ -24,17 +16,17 @@ export function LogPage() {
     return <Redirect to="/signin" />;
   }
   const handleAttendClick = async () => {
-    await logAttendance(data.userId, "Arrive");
+    await logAttendance(data.userId, AttendanceType.Arrive);
   };
   const handleLeaveClick = async () => {
-    await logAttendance(data.userId, "Leave");
+    await logAttendance(data.userId, AttendanceType.Leave);
   };
   return (
     <div>
-      <Button primary onClick={handleAttendClick}>
+      <Button primary onClick={handleAttendClick} disabled={loggingAttendance}>
         Attend
       </Button>
-      <Button secondary onClick={handleLeaveClick}>
+      <Button secondary onClick={handleLeaveClick} disabled={loggingAttendance}>
         Leave
       </Button>
     </div>

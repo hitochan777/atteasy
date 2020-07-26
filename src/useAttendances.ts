@@ -1,6 +1,6 @@
 import useSWR, { mutate } from "swr";
 
-import { Attendance } from "./attendance";
+import { Attendance, AttendanceType } from "./attendance";
 import { fetcher } from "./fetcher";
 import { useState } from "react";
 
@@ -64,3 +64,43 @@ export function useDeleteAttendance(): {
   };
   return { deleteAttendance, loading, error };
 }
+
+export const useLogAttendance = (): {
+  logAttendance: (
+    userId: string,
+    type: AttendanceType,
+    occurredAt?: Date
+  ) => Promise<void>;
+  loading: boolean;
+  error: Error | null;
+} => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const logAttendance = async (
+    userId: string,
+    type: AttendanceType,
+    occurredAt?: Date
+  ) => {
+    setLoading(true);
+    const endpoint = `${process.env.REACT_APP_API_ENDPOINT}/api/${userId}/attendance?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app`;
+    try {
+      const data: { type: string; occurredAt?: number } = {
+        type: AttendanceType[type],
+      };
+      if (occurredAt) {
+        data.occurredAt = occurredAt.getTime() / 1000;
+      }
+      await fetch(endpoint, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "content-type": "application/json" },
+      });
+    } catch (e) {
+      setError(e as Error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  return { logAttendance, loading, error };
+};
