@@ -124,7 +124,7 @@ export const AddForm: React.FC<Props> = ({
           onChange={handlers.changeAttendanceType}
         />
       </Form.Group>
-      <Message>{errorMessage}</Message>
+      {errorMessage && <Message>{errorMessage}</Message>}
     </Form>
   );
 };
