@@ -74,11 +74,10 @@ export function HistoryPage() {
             const lastLeave = attendances
               .reverse()
               .find((attendance) => attendance.type === AttendanceType.Leave);
+            
             return (
               <Table.Row key={day}>
-                <Table.Cell>{`${now.getFullYear()}/${
-                  now.getMonth() + 1
-                }/${day}`}</Table.Cell>
+                <Table.Cell>{`${year}/${month}/${day}`}</Table.Cell>
                 <Table.Cell>
                   {firstArrival ? getTimePart(firstArrival.occurredAt) : "-"}
                 </Table.Cell>
