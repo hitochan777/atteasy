@@ -16,13 +16,9 @@ export function HistoryPage() {
   const { data, loading: isLoadingUser } = useUser();
   const now = new Date();
   const query = useQuery();
-  const year = query.get("year");
-  const month = query.get("month");
-  const { attendances, isLoading } = useAttendances(
-    data?.userId,
-    year ? +year : now.getFullYear(),
-    month ? +month : now.getMonth() + 1
-  );
+  const year = query.get("year") ? +query.get("year") : now.getFullYear();
+  const month = query.get("month") ? +query.get("month") : now.getMonth() + 1;
+  const { attendances, isLoading } = useAttendances(data?.userId, year, month);
 
   const groupedAttendances = useMemo(() => {
     if (!attendances) {
@@ -54,7 +50,7 @@ export function HistoryPage() {
 
   return (
     <div>
-      <YearMonthSelector year={2020} month={7} />
+      <YearMonthSelector year={year} month={month} />
       <Table celled>
         <Table.Header>
           <Table.Row>
@@ -74,7 +70,7 @@ export function HistoryPage() {
             const lastLeave = attendances
               .reverse()
               .find((attendance) => attendance.type === AttendanceType.Leave);
-            
+
             return (
               <Table.Row key={day}>
                 <Table.Cell>{`${year}/${month}/${day}`}</Table.Cell>
