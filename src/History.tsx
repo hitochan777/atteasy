@@ -16,8 +16,8 @@ export function HistoryPage() {
   const { data, loading: isLoadingUser } = useUser();
   const now = new Date();
   const query = useQuery();
-  const year = query.get("year") ? +query.get("year") : now.getFullYear();
-  const month = query.get("month") ? +query.get("month") : now.getMonth() + 1;
+  const year = +(query.get("year") ?? now.getFullYear());
+  const month = +(query.get("month") ?? now.getMonth() + 1);
   const { attendances, isLoading } = useAttendances(data?.userId, year, month);
 
   const groupedAttendances = useMemo(() => {
