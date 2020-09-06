@@ -10,9 +10,10 @@ export function useAttendances(
   month: number
 ): { attendances?: Attendance[]; isLoading: boolean; isError: any } {
   const endpoint = `${process.env.REACT_APP_API_ENDPOINT}/api/${userId}/attendances?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app&year=${year}&month=${month}`;
+  const shouldFetch = !!userId;
   const { data, error } = useSWR<
     { id: string; occurredAt: string; type: number }[]
-  >(userId ? endpoint : null, fetcher);
+  >(shouldFetch ? endpoint : null, fetcher);
   const attendances = data?.map(
     (attendance) =>
       new Attendance(
@@ -23,7 +24,7 @@ export function useAttendances(
   );
   return {
     attendances,
-    isLoading: !error && !data,
+    isLoading: shouldFetch && !error && !data,
     isError: error,
   };
 }
