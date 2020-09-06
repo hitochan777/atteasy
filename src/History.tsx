@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useLocation, Redirect, Link } from "react-router-dom";
-import { Table } from "semantic-ui-react";
+import { Table, Button } from "semantic-ui-react";
 
 import { Attendance, AttendanceType } from "./attendance";
 import { YearMonthSelector } from "./YearMonthSelector";
@@ -50,6 +50,9 @@ export function HistoryPage() {
 
   return (
     <div>
+      <Button href={`/csv/${year}/${month}`} download>
+        Download CSV
+      </Button>
       <YearMonthSelector year={year} month={month} />
       <Table celled>
         <Table.Header>
