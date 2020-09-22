@@ -1,3 +1,3 @@
-# Attendance Taking app - front end
+# Attendance Taking app - frontend
 
 TBW
