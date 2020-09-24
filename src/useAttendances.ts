@@ -9,7 +9,7 @@ export function useAttendances(
 	year: number,
 	month: number
 ): { attendances?: Attendance[]; isLoading: boolean; isError: any } {
-	const endpoint = `/api/${userId}/attendances?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app&year=${year}&month=${month}`;
+	const endpoint = `/api/${userId}/attendances?year=${year}&month=${month}`;
 	const shouldFetch = !!userId;
 	const { data, error } = useSWR<
 		{ id: string; occurredAt: string; type: number }[]
@@ -45,7 +45,7 @@ export function useDeleteAttendance(): {
 		attendance: Attendance
 	) => {
 		setLoading(true);
-		const endpoint = `/api/${userId}/attendance/${attendance.id}?code=${process.env.REACT_APP_API_KEY}`;
+		const endpoint = `/api/${userId}/attendance/${attendance.id}`;
 		try {
 			await fetch(endpoint, {
 				method: "DELETE"
@@ -55,9 +55,7 @@ export function useDeleteAttendance(): {
 		} finally {
 			setLoading(false);
 			mutate(
-				`/api/${userId}/attendances?code=${
-					process.env.REACT_APP_API_KEY
-				}&clientId=attendance-taking-app&year=${attendance.occurredAt.getFullYear()}&month=${
+				`/api/${userId}/attendances?year=${attendance.occurredAt.getFullYear()}&month=${
 					attendance.occurredAt.getMonth() + 1
 				}`
 			);
@@ -84,7 +82,7 @@ export const useLogAttendance = (): {
 		occurredAt?: Date
 	) => {
 		setLoading(true);
-		const endpoint = `/api/${userId}/attendance?code=${process.env.REACT_APP_API_KEY}&clientId=attendance-taking-app`;
+		const endpoint = `/api/${userId}/attendance`;
 		try {
 			const data: { type: string; occurredAt?: string } = {
 				type: AttendanceType[type]
