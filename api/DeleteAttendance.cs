@@ -24,6 +24,7 @@ namespace AttendanceTaking
 			[HttpTrigger(AuthorizationLevel.Function, "delete", Route = "{userId}/attendance/{attendanceId}")] HttpRequest req,
 			ILogger log, string userId, string attendanceId)
 		{
+			/*
 			var claimsPrincipal = StaticWebAppsAuth.GetClaimsPrincipal(req);
 			if (claimsPrincipal.Identity.IsAuthenticated)
 			{
@@ -33,6 +34,7 @@ namespace AttendanceTaking
 			{
 				return new UnauthorizedResult();
 			}
+			*/
 			if (String.IsNullOrEmpty(userId) || String.IsNullOrEmpty(attendanceId))
 			{
 				return new BadRequestResult();

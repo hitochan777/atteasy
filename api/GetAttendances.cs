@@ -24,6 +24,7 @@ namespace AttendanceTaking
 			[HttpTrigger(AuthorizationLevel.Function, "get", Route = "{userId}/attendances")] HttpRequest req,
 			ILogger log, string userId)
 		{
+			/*
 			var claimsPrincipal = StaticWebAppsAuth.GetClaimsPrincipal(req);
 			if (claimsPrincipal.Identity.IsAuthenticated)
 			{
@@ -33,6 +34,7 @@ namespace AttendanceTaking
 			{
 				return new UnauthorizedResult();
 			}
+			*/
 			if (String.IsNullOrEmpty(userId))
 			{
 				return new BadRequestResult();

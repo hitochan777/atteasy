@@ -26,6 +26,7 @@ namespace AttendanceTaking
 			HttpRequest req,
 			ILogger log, string userId)
 		{
+			/*
 			var claimsPrincipal = StaticWebAppsAuth.GetClaimsPrincipal(req);
 			if (claimsPrincipal.Identity.IsAuthenticated)
 			{
@@ -39,7 +40,7 @@ namespace AttendanceTaking
 			{
 				return new BadRequestResult();
 			}
-
+			*/
 			string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 			log.LogInformation($"Raw request: {requestBody}");
 			var attendance = JsonConvert.DeserializeObject<Attendance>(requestBody);
