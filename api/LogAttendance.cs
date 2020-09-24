@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -25,6 +26,15 @@ namespace AttendanceTaking
 			HttpRequest req,
 			ILogger log, string userId)
 		{
+			var claimsPrincipal = StaticWebAppsAuth.GetClaimsPrincipal(req);
+			if (claimsPrincipal.Identity.IsAuthenticated)
+			{
+				return new ForbidResult();
+			}
+			if (claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier).Value != userId)
+			{
+				return new UnauthorizedResult();
+			}
 			if (String.IsNullOrEmpty(userId))
 			{
 				return new BadRequestResult();
@@ -47,25 +57,25 @@ namespace AttendanceTaking
 			switch (req.Method)
 			{
 				case "POST":
-				{
-					var ok = await _attendanceRepository.Create(userId, attendance);
-					if (!ok)
 					{
-						return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-					}
+						var ok = await _attendanceRepository.Create(userId, attendance);
+						if (!ok)
+						{
+							return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+						}
 
-					break;
-				}
+						break;
+					}
 				case "PUT":
-				{
-					var ok = await _attendanceRepository.Update(userId, attendance);
-					if (!ok)
 					{
-						return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-					}
+						var ok = await _attendanceRepository.Update(userId, attendance);
+						if (!ok)
+						{
+							return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+						}
 
-					break;
-				}
+						break;
+					}
 				default:
 					return new StatusCodeResult(StatusCodes.Status405MethodNotAllowed);
 			}
