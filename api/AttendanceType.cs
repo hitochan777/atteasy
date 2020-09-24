@@ -1,8 +1,8 @@
-﻿namespace AttendanceTaking
+namespace AttendanceTaking
 {
-    public enum AttendanceType 
-    {
-        Arrive,
-        Leave
-    }
+	public enum AttendanceType
+	{
+		Arrive,
+		Leave
+	}
 }
