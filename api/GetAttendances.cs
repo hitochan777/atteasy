@@ -24,17 +24,15 @@ namespace AttendanceTaking
 			[HttpTrigger(AuthorizationLevel.Function, "get", Route = "{userId}/attendances")] HttpRequest req,
 			ILogger log, string userId)
 		{
-			var claimsPrincipal = StaticWebAppsAuth.GetClaimsPrincipal(req, log);
+			var claimsPrincipal = StaticWebAppsAuth.GetClaimsPrincipal(req);
 			if (claimsPrincipal.Identity.IsAuthenticated)
 			{
 				return new ForbidResult();
 			}
-			/*
 			if (claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier).Value != userId)
 			{
 				return new UnauthorizedResult();
 			}
-			*/
 			if (String.IsNullOrEmpty(userId))
 			{
 				return new BadRequestResult();
