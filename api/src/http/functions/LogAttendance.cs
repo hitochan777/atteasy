@@ -33,7 +33,7 @@ namespace AttendanceTaking.http.functions
 			{
 				return new BadRequestResult();
 			}
-			if (req.isAuthorized(userId))
+			if (!req.isAuthorized(userId))
 			{
 				return new UnauthorizedResult();
 			}
