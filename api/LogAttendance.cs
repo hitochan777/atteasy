@@ -1,6 +1,6 @@
 using System;
+using static System.String;
 using System.IO;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -26,22 +26,16 @@ namespace AttendanceTaking
 			HttpRequest req,
 			ILogger log, string userId)
 		{
-			/*
-			var claimsPrincipal = StaticWebAppsAuth.GetClaimsPrincipal(req);
-			if (claimsPrincipal.Identity.IsAuthenticated)
-			{
-				return new ForbidResult();
-			}
-			if (claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier).Value != userId)
-			{
-				return new UnauthorizedResult();
-			}
-			if (String.IsNullOrEmpty(userId))
+			if (IsNullOrEmpty(userId))
 			{
 				return new BadRequestResult();
 			}
-			*/
-			string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+			if (req.isAuthorized(userId))
+			{
+				return new UnauthorizedResult();
+			}
+
+			var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 			log.LogInformation($"Raw request: {requestBody}");
 			var attendance = JsonConvert.DeserializeObject<Attendance>(requestBody);
 

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using System.Security.Claims;
+using static System.String;
 
 namespace AttendanceTaking
 {
@@ -24,33 +24,26 @@ namespace AttendanceTaking
 			[HttpTrigger(AuthorizationLevel.Function, "get", Route = "{userId}/attendances")] HttpRequest req,
 			ILogger log, string userId)
 		{
-			var claimsPrincipal = StaticWebAppsAuth.GetClaimsPrincipal(req);
-			if (claimsPrincipal.Identity.IsAuthenticated)
-			{
-				return new ForbidResult();
-			}
-			if (claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier).Value != userId)
-			{
-				return new UnauthorizedResult();
-			}
-			if (String.IsNullOrEmpty(userId))
+			if (IsNullOrEmpty(userId))
 			{
 				return new BadRequestResult();
 			}
+			if (req.isAuthorized(userId))
+			{
+				return new UnauthorizedResult();
+			}
 
-			int year, month;
 
 			var now = DateTimeOffset.UtcNow.AddHours(9);
-			// If there are multiple matching querystrings, take the first occurrence.
-			string yearString = req.Query["year"].Count > 0 ? req.Query["year"].First() : $"{now.Year}";
-			string monthString = req.Query["month"].Count > 0 ? req.Query["month"].First() : $"{now.Month}";
+			// If there are multiple matching query strings, take the first occurrence.
+			var yearString = req.Query["year"].Count > 0 ? req.Query["year"].First() : $"{now.Year}";
+			var monthString = req.Query["month"].Count > 0 ? req.Query["month"].First() : $"{now.Month}";
 
-
-			int.TryParse(yearString, out year);
-			int.TryParse(monthString, out month);
+			int.TryParse(yearString, out var year);
+			int.TryParse(monthString, out var month);
 
 			var attendances = await _attendanceRepository.FindAll(userId, year, month);
-			string responseMessage = JsonConvert.SerializeObject(attendances);
+			var responseMessage = JsonConvert.SerializeObject(attendances);
 			return new OkObjectResult(responseMessage);
 		}
 	}
