@@ -44,12 +44,11 @@ namespace AttendanceTaking.http.helpers
 		public static bool IsAuthorized(ClientPrincipal clientPrincipal, string targetUserId)
 		{
 			var principal = CreateClaimPrincipal(clientPrincipal);
-
-			if (!principal.Identity.IsAuthenticated)
+			var roles = principal.Claims.Where(claim => claim.Type == ClaimTypes.Role);
+			if (!roles.Any())
 			{
 				return false;
 			}
-
 			var loggedInUserId = principal.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
 			return loggedInUserId == targetUserId;
 		}

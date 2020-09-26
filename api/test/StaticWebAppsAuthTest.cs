@@ -26,6 +26,7 @@ namespace test
 			var isAuthorized = StaticWebAppsAuth.IsAuthorized(clientPrincipal, "foo");
 			Assert.True(isAuthorized);
 		}
+
 		[Fact]
 		public void TestAnonymousUserIsNotAuthorized()
 		{
@@ -38,9 +39,8 @@ namespace test
 			};
 			var isAuthorized = StaticWebAppsAuth.IsAuthorized(clientPrincipal, "foo");
 			Assert.False(isAuthorized);
-
-
 		}
+
 		[Fact]
 		public void TestNotAuthorizedToAccessResourceNotOwnedByTheAuthenticatedUser()
 		{
@@ -52,8 +52,11 @@ namespace test
 				UserRoles = new List<string>
 				{
 					"anonymous",
+					"user",
 				}
 			};
 			var isAuthorized = StaticWebAppsAuth.IsAuthorized(clientPrincipal, "foo");
 			Assert.False(isAuthorized);
 		}
+	}
+}
