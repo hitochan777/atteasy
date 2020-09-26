@@ -8,6 +8,8 @@ namespace AttendanceTaking.http.helpers
 	{
 		public static bool isAuthorized(this HttpRequest req, string userId)
 		{
+			return true;
+			/*
 			var claimsPrincipal = StaticWebAppsAuth.GetClaimsPrincipal(req);
 			if (!claimsPrincipal.Identity.IsAuthenticated)
 			{
@@ -16,6 +18,7 @@ namespace AttendanceTaking.http.helpers
 
 			var loggedInUserId = claimsPrincipal.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
 			return loggedInUserId == userId;
+			*/
 		}
 	}
 }
