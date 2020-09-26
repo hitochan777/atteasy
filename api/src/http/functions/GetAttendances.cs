@@ -9,7 +9,10 @@ using Newtonsoft.Json;
 using System;
 using static System.String;
 
-namespace AttendanceTaking
+using AttendanceTaking.http.helpers;
+using AttendanceTaking.domain;
+
+namespace AttendanceTaking.http.functions
 {
 	public class GetAttendances
 	{

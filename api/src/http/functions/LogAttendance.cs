@@ -9,7 +9,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace AttendanceTaking
+using AttendanceTaking.http.helpers;
+using AttendanceTaking.domain;
+
+namespace AttendanceTaking.http.functions
 {
 	public class LogAttendance
 	{

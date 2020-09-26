@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace AttendanceTaking
+namespace AttendanceTaking.domain
 {
 	public interface AttendanceRepository
 	{

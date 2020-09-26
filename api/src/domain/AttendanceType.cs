@@ -1,4 +1,4 @@
-namespace AttendanceTaking
+namespace AttendanceTaking.domain
 {
 	public enum AttendanceType
 	{

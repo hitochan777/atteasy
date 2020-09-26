@@ -5,7 +5,9 @@ using System.Linq;
 using Microsoft.Azure.Cosmos.Linq;
 using System.Collections.Generic;
 
-namespace AttendanceTaking.Infra.CosmosDB
+using AttendanceTaking.domain;
+
+namespace AttendanceTaking.infra
 {
 	class CosmosDBAttendanceRepository : AttendanceRepository
 	{

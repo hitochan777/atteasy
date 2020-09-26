@@ -2,7 +2,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace AttendanceTaking
+namespace AttendanceTaking.http.helpers
 {
 	public static class HttpRequestExtension
 	{

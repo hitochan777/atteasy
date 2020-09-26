@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 
-namespace AttendanceTaking
+namespace AttendanceTaking.domain
 {
 	[JsonObject(MemberSerialization.OptIn)]
 	public class Attendance

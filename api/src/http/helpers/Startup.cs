@@ -1,10 +1,12 @@
-using AttendanceTaking.Infra.CosmosDB;
 using Microsoft.Azure.Cosmos.Fluent;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
-[assembly: FunctionsStartup(typeof(AttendanceTaking.Startup))]
-namespace AttendanceTaking
+using AttendanceTaking.infra;
+using AttendanceTaking.domain;
+
+[assembly: FunctionsStartup(typeof(AttendanceTaking.http.helpers.Startup))]
+namespace AttendanceTaking.http.helpers
 {
 	class Startup : FunctionsStartup
 	{
@@ -20,7 +22,7 @@ namespace AttendanceTaking
 			builder.Services.AddSingleton<AttendanceRepository, CosmosDBAttendanceRepository>();
 		}
 
-		public static string GetEnvironmentVariable(string name)
+		private static string GetEnvironmentVariable(string name)
 		{
 			return System.Environment.GetEnvironmentVariable(name, System.EnvironmentVariableTarget.Process);
 		}

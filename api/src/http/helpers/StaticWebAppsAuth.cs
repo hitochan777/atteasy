@@ -5,9 +5,9 @@ using System.Security.Claims;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 
-namespace AttendanceTaking
+namespace AttendanceTaking.http.helpers
 {
-	public class StaticWebAppsAuth
+	public static class StaticWebAppsAuth
 	{
 		private class ClientPrincipal
 		{

@@ -6,7 +6,10 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace AttendanceTaking
+using AttendanceTaking.http.helpers;
+using AttendanceTaking.domain;
+
+namespace AttendanceTaking.http.functions
 {
 	public class DeleteAttendance
 	{
